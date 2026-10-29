@@ -1,0 +1,13 @@
+# roots of the generated code that the runtime calls
+0x429230   # update
+0x424b70   # menu state machine / input consumer
+0x42fe40   # draw
+0x430ce0   # prepareGame
+0x42f4a0   # audio tick
+0x424a80   # per-frame ui tick
+0x42cdf0   # constructor
+0x430e70   # setup
+0x41a310
+0x42f6c0
+0x424730
+0x424610

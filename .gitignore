@@ -1,0 +1,12 @@
+build/
+local/
+dist/
+data/
+src/gen/
+*.nro
+*.elf
+*.nacp
+*.7z
+*.zip
+*.nsp
+__pycache__/

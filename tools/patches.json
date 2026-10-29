@@ -1,0 +1,80 @@
+{
+ "0x424b70": [
+  {
+   "lines": [
+    283,
+    297
+   ],
+   "expect": "if (*(char *)(param_1 + 0x40a1c) != '\\0') {",
+   "with": "    if (*(char *)(param_1 + 0x40a1c) != '\\0') { if ((*(char *)(param_1 + 0x29d4) != '\\0') || (*(char *)(param_1 + 0x29d5) != '\\0')) { *(undefined4 *)(param_1 + 0x29d0) = 0; } }"
+  },
+  {
+   "lines": [
+    928,
+    974
+   ],
+   "expect": "if (*(uint *)(param_1 + 0xd8d0) != 0) {",
+   "with": "                  if (*(uint *)(param_1 + 0xd8d0) != 0) { NameBackspace(param_1 + 0xd8c0,0); }"
+  },
+  {
+   "lines": [
+    1067,
+    1114
+   ],
+   "expect": "iVar6 = *(int *)(param_1 + 0x5b6c) + *(int *)(param_1 + 0x5b70);",
+   "with": "iVar6 = *(int *)(param_1 + 0x5b6c) + *(int *)(param_1 + 0x5b70); if (*(int *)(param_1 + 0x57fc + iVar6 * 0x18) != 0) { NameBackspace(param_1 + 0x57ec + iVar6 * 0x18,param_1 + 0x5b74); }"
+  },
+  {
+   "lines": [
+    1117,
+    1122
+   ],
+   "expect": "std::basic_string<char,std::char_traits<char>,std::allocator<char>_>::operator=",
+   "with": "FUN_00404940((void *)(param_1 + 0x5b74),(int *)((*(int *)(param_1 + 0x5b70) + *(int *)(param_1 + 0x5b6c)) * 0x18 + 0x57ec + param_1));"
+  },
+  {
+   "lines": [
+    1131,
+    1176
+   ],
+   "expect": "pbVar1 = (basic_string<char,std::char_traits<char>,std::allocator<char>_> *)",
+   "with": "if (*(int *)(param_1 + 0x57fc + iVar6 * 0x18) != 0) { NameBackspace(param_1 + 0x57ec + iVar6 * 0x18,param_1 + 0x5b74); }"
+  }
+ ],
+ "0x429230": [
+  {
+   "lines": [
+    343,
+    343
+   ],
+   "expect": "if ((1.0 <= *(float *)(param_1 + 0x2988)) && (*(float *)(param_1 + 0x188) == 0.0)) {",
+   "with": "  if (extras_death_hook((int)param_1)) { *(float *)(param_1 + 0x2988) = 0.0; }\n  if ((1.0 <= *(float *)(param_1 + 0x2988)) && (*(float *)(param_1 + 0x188) == 0.0)) {"
+  }
+ ],
+ "0x402780": [
+  {
+   "lines": [
+    121,
+    146
+   ],
+   "expect": "local_6c = (undefined4 *)0x0;",
+   "with": "FillGameTrig((int)param_1);"
+  },
+  {
+   "lines": [
+    360,
+    360
+   ],
+   "expect": "FUN_004150b0((int)param_1);",
+   "with": "CreditNames((int)param_1);"
+  },
+  {
+   "lines": [
+    412,
+    1016
+   ],
+   "expect": "uVar8 = SteamRemoteStorage();",
+   "with": "GameLoadPersisted((int)param_1);"
+  }
+ ]
+}
