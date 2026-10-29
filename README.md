@@ -38,7 +38,7 @@ Saves, local high scores and settings are written next to the `.nro`.
 
 Enter **Up Up Down Down Left Right Left Right B A** (or hold **L + R + ZL + ZR** for a second). Navigate with touch, D-pad or stick, close with **+**.
 
-Cheats (every one can be bound to a button): god mode, no walls, autopilot, game speed, slow-mo, pause / frame step, rewind, save states, rotation tricks and more. Also settings, a frame-time graph and debug tools.
+Cheats are **off by default**: tick "Enable cheats" in the Cheats tab (it resets every time the game starts). Every cheat can be bound to a button: god mode, no walls, autopilot, game speed, slow-mo, pause / frame step, rewind, save states, rotation tricks and more. Also settings, a frame-time graph and debug tools.
 
 ## Credits
 

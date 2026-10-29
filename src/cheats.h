@@ -19,6 +19,7 @@ void cheats_before_update(int app);
 void cheats_after_update(int app);
 void cheats_before_draw(int app);
 
+bool cheats_enabled();                      // master switch of the Cheats tab (off at every start)
 void cheats_tab();                          // the "Cheats" tab content (below the progress section)
 bool cheats_osd(std::string& out);          // active cheats summary; false when none
 bool cheats_run(const std::string& action); // scripted test hook ("rewind", "save1", "load1", "bot", ...)

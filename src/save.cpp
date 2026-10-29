@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+void nx_commit_save();     // flush the title save device (NSP install); no-op otherwise
 static std::string g_savePath = "save.dat";
 void rt_set_save_path(const std::string& p) { g_savePath = p; }
 
@@ -52,6 +53,7 @@ void SavePersisted(int game)
     fwrite(&n, 1, 1, f);
     fwrite(pn.data(), 1, n, f);
     fclose(f);
+    nx_commit_save();
 }
 
 void GameLoadPersisted(int game)

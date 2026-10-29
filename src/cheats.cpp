@@ -77,6 +77,7 @@ std::string g_base = ".";
 // ---- cheat state -----------------------------------------------------------------------------------------
 bool g_nowalls = false, g_bot = false, g_slowToggle = false, g_paused = false, g_rewindDeath = false;
 bool g_forceHyper = false;     // test/training: every run starts in hyper mode
+bool g_cheatsOn = false;       // master switch: everything below does nothing (and is reset) while off; not persisted
 bool g_musicSlow = true, g_musicRewind = true;    // music follows slow-mo / speed, music plays backwards on rewind
 bool g_rotFreeze = false, g_rotReverse = false, g_playerFast = false, g_nopulse = false;
 float g_speed = 1.0f, g_slowFactor = 0.3f, g_rotMul = 1.0f, g_playerBoost = 2.0f;
@@ -535,6 +536,8 @@ void cheats_init(const std::string& baseDir)
     fclose(f);
 }
 
+void nx_commit_save();     // flush the title save device (NSP install); no-op otherwise
+
 void cheats_save()
 {
     FILE* f = fopen((g_base + "/cheats.cfg").c_str(), "w");
@@ -547,6 +550,7 @@ void cheats_save()
     fprintf(f, "rewindsecs=%u\n", (unsigned)g_rewindSecs);
     fprintf(f, "musicslow=%u\nmusicrewind=%u\n", g_musicSlow ? 1u : 0u, g_musicRewind ? 1u : 0u);
     fclose(f);
+    nx_commit_save();
 }
 
 void cheats_event(const SDL_Event& e)
@@ -596,7 +600,7 @@ void cheats_event(const SDL_Event& e)
 bool cheats_frame(double dt, bool bindsActive, bool overlayHalt)
 {
     g_clock += dt;
-    if (g_capture < 0 && bindsActive) {
+    if (g_capture < 0 && bindsActive && g_cheatsOn) {
         pollBinds();
         g_slowHeld = g_active[A_SLOWMO];
     } else {
@@ -709,7 +713,7 @@ void cheats_after_update(int app)
         if (g_nopulse) {
             A(float, app + O_PULSE) = 0.0f;
         }
-        if (playing(app) && !g_rewinding) {
+        if (g_cheatsOn && playing(app) && !g_rewinding) {
             ringPush(app);
         }
     } else {
@@ -821,8 +825,32 @@ void buttonRow(int a, const char* label)
 }
 }   // namespace
 
+void resetAllCheats()
+{
+    g_cheatGod = g_nowalls = g_bot = g_slowToggle = g_paused = g_rewindDeath = false;
+    g_rotFreeze = g_rotReverse = g_playerFast = g_nopulse = g_forceHyper = false;
+    g_speed = 1.0f;
+    g_rotMul = 1.0f;
+    g_stepFrames = 0;
+    g_autoRewind = 0;
+    g_rewinding = false;
+    g_ringCount = 0;
+    g_capture = -1;
+    for (int a = 0; a < A_COUNT; ++a) g_active[a] = false;
+    g_slowHeld = false;
+}
+
+bool cheats_enabled() { return g_cheatsOn; }
+
 void cheats_tab()
 {
+    if (ImGui::Checkbox("Enable cheats", &g_cheatsOn) && !g_cheatsOn) {
+        resetAllCheats();
+    }
+    if (!g_cheatsOn) {
+        ImGui::TextDisabled("Cheats are off. Tick the box to use them (they switch off again every time the game starts).");
+        return;
+    }
     if (g_capture >= 0) {
         ImGui::TextColored(ImVec4(1, 0.85f, 0.3f, 1), "Press the button (or combo) for: %s - release everything to confirm",
                            kActs[g_capture].label);

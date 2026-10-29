@@ -145,6 +145,12 @@ static LONG WINAPI crashHandler(EXCEPTION_POINTERS* e)
 }
 #endif
 
+#ifdef __SWITCH__
+static bool g_nspSave = false;
+void nx_commit_save() { if (g_nspSave) fsdevCommitDevice("save"); }
+#else
+void nx_commit_save() {}
+#endif
 static int g_hostW = 1024, g_hostH = 640;
 int main(int argc, char** argv)
 {
@@ -186,9 +192,34 @@ int main(int argc, char** argv)
             FILE* t = fopen("rom:/data/image.bin", "rb");
             if (t) {
                 fclose(t);
-                mkdir("sdmc:/switch", 0777);
-                mkdir("sdmc:/switch/superhexagon", 0777);
-                base = "sdmc:/switch/superhexagon";
+                // saves: the title's own device save data (the NSP has no business on the SD card); fall back to the SD
+                u64 pid = 0;
+                svcGetInfo(&pid, InfoType_ProgramId, CUR_PROCESS_HANDLE, 0);
+                g_nspSave = R_SUCCEEDED(fsdevMountDeviceSaveData("save", pid));
+                if (g_nspSave) {
+                    base = "save:";
+                    // bring over what the homebrew build kept on the SD card
+                    for (const char* fn : {"save.dat", "highscores.dat", "extras.cfg", "cheats.cfg"}) {
+                        std::string dst = base + "/" + fn, src = std::string("sdmc:/switch/superhexagon/") + fn;
+                        if (FILE* t = fopen(dst.c_str(), "rb")) {
+                            fclose(t);
+                            continue;
+                        }
+                        FILE* in = fopen(src.c_str(), "rb");
+                        if (!in) continue;
+                        FILE* out = fopen(dst.c_str(), "wb");
+                        char buf[4096];
+                        size_t n;
+                        while (out && (n = fread(buf, 1, sizeof buf, in)) > 0) fwrite(buf, 1, n, out);
+                        if (out) fclose(out);
+                        fclose(in);
+                    }
+                    fsdevCommitDevice("save");
+                } else {
+                    mkdir("sdmc:/switch", 0777);
+                    mkdir("sdmc:/switch/superhexagon", 0777);
+                    base = "sdmc:/switch/superhexagon";
+                }
                 dataDir = "rom:/data";
                 found = true;
             } else {
@@ -313,6 +344,7 @@ int main(int argc, char** argv)
         }
     }
     fflush(stderr);
+    nx_commit_save();
     extras_shutdown();
 #ifdef __SWITCH__
     // orderly shutdown so the system sees a clean exit

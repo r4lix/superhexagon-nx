@@ -24,6 +24,7 @@ int text_px(int idx);
 void gfx_set_alpha(int a);
 int rt_log_copy(std::vector<std::string>& out);
 void audio_shutdown();
+void nx_commit_save();
 void audio_set_halted(bool h);
 void audio_set_rate(float r);
 void input_clear_pressed();
@@ -88,6 +89,7 @@ void status(const char* fmt, ...)
     g_statusUntil = g_clock + 4.0;
 }
 
+
 void saveCfg()
 {
     FILE* f = fopen((g_base + "/extras.cfg").c_str(), "w");
@@ -97,6 +99,7 @@ void saveCfg()
     fprintf(f, "filter=%d\nmirror=%d\nswaplr=%d\nvsync=%d\nfps=%d\nuiscale=%.2f\npauseonopen=%d\n", g_filter, g_mirror ? 1 : 0,
             g_swapLR ? 1 : 0, g_vsync ? 1 : 0, g_showFps ? 1 : 0, g_uiScale, g_pauseOnOpen ? 1 : 0);
     fclose(f);
+    nx_commit_save();
 }
 
 void loadCfg()
@@ -172,6 +175,7 @@ void hsSave()
     fwrite(&magic, 4, 1, f);
     fwrite(g_hs, sizeof g_hs, 1, f);
     fclose(f);
+    nx_commit_save();
 }
 
 void hsCommit(int mode, int frames)
@@ -306,6 +310,9 @@ void resetTop5()
 void tabCheats()
 {
     cheats_tab();
+    if (!cheats_enabled()) {
+        return;
+    }
     ImGui::Separator();
     ImGui::TextUnformatted("Progress");
     if (ImGui::Button("Unlock all levels")) {
