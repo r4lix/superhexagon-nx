@@ -1,5 +1,7 @@
 # superhexagon-nx
 
+<img width="4060" height="1732" alt="1793289575237" src="https://github.com/user-attachments/assets/c8fa9f00-cab3-4c25-bc36-abbe63b5d419" />
+
 Super Hexagon (Terry Cavanagh) running natively on the Nintendo Switch.
 
 **No game content is included.** You need your own copy of the game (the Steam version).
